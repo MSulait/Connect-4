@@ -1,0 +1,148 @@
+package com.company;
+import java.util.Scanner;
+public class Main {
+
+    public static void main(String[] args) {
+	// write your code here
+
+        Scanner sc = new Scanner(System.in);
+        //Creating a grid
+        char[][] grid = new char[6][7];
+        for (int row = 0; row < grid.length; row++)
+        {
+            for (int column = 0; column < grid[0].length; column++)
+            {
+                grid[row][column] = ' ';
+            }
+        }
+        int turn = 1;
+        char player = 'R';
+        boolean winner = false;
+
+        //Playing turns
+        while (winner == false && turn <= 42)
+        {
+            boolean validMove;
+            int play;
+            do {
+                display(grid);
+                System.out.println("Player " + player + "'s turn");
+                play = sc.nextInt();
+                //validate play
+                validMove = validPlacement(play,grid);
+                }
+            while (validMove == false);
+            //Placing checkers
+            for (int row = grid.length-1; row >= 0; row--){
+                if(grid[row][play] == ' '){
+                    grid[row][play] = player;
+                    break;
+                }
+            }
+
+            //Checking if someone won
+            winner = Winner(player,grid);
+
+            //switch players
+            if (player == 'R'){
+                player = 'Y';
+            }else
+            {
+                player = 'R';
+            }
+
+            turn++;
+        }
+        display(grid);
+        if (winner){
+            if (player=='R'){
+                System.out.println("Yellow is the winner!");
+            }else{
+                System.out.println("Red is the winner!");
+            }
+        }else{
+            System.out.println("Tie game :(");
+        }
+
+    }
+
+    public static void display(char[][] grid){
+        System.out.println("---------------");
+        for (int row = 0; row < grid.length; row++)
+        {
+            System.out.print("|");
+            for (int col = 0; col < grid[0].length; col++)
+            {
+                System.out.print(grid[row][col]);
+                System.out.print("|");
+            }
+            System.out.println();
+            System.out.println("---------------");
+        }
+        System.out.println(" 0 1 2 3 4 5 6");
+        System.out.println();
+    }
+    //Check for continuous checkers
+    public static boolean Winner(char player, char[][] grid){
+
+        for(int row = 0; row<grid.length; row++)
+        {
+            for (int col = 0;col < grid[0].length - 3;col++)
+            {
+                if (grid[row][col] == player   && grid[row][col+1] == player &&
+                        grid[row][col+2] == player && grid[row][col+3] == player)
+                {
+                    return true;
+                }
+            }
+        }
+        //For up/down
+        for(int row = 0; row < grid.length - 3; row++)
+        {
+            for(int col = 0; col < grid[0].length; col++)
+            {
+                if (grid[row][col] == player   && grid[row+1][col] == player &&
+                        grid[row+2][col] == player && grid[row+3][col] == player)
+                {
+                    return true;
+                }
+            }
+        }
+        //Upward Diagonal
+        for(int row = 3; row < grid.length; row++){
+            for(int col = 0; col < grid[0].length - 3; col++){
+                if (grid[row][col] == player   && grid[row-1][col+1] == player &&
+                        grid[row-2][col+2] == player && grid[row-3][col+3] == player)
+                {
+                    return true;
+                }
+            }
+        }
+        //Downward Diagonal
+        for(int row = 0; row < grid.length - 3; row++)
+        {
+            for(int col = 0; col < grid[0].length - 3; col++)
+            {
+                if (grid[row][col] == player   && grid[row+1][col+1] == player &&
+                        grid[row+2][col+2] == player && grid[row+3][col+3] == player)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean validPlacement(int column, char[][] grid){
+
+        if (column < 0 || column > grid[0].length)
+        {
+            return false;
+        }
+        if (grid[0][column] != ' ')
+        {
+            return false;
+        }
+        return true;
+    }
+}
